@@ -214,9 +214,9 @@ class HomeView extends GetView<HomeViewCTL> {
             DrawerHeader(
               decoration: BoxDecoration(
                 // color: Color(0xffF89C9E),
-                color: Colors.red.shade800,
+                color: Colors.red,
               ),
-              child: Image.asset("assets/icon/pdficon.png"),
+              child: Image.asset("assets/icon/icon.png"),
               // child: Text('Menu',
               //     style: TextStyle(color: Colors.white, fontSize: 24)),
             ),
@@ -1281,7 +1281,6 @@ class FeatureCard1 extends StatelessWidget {
     );
   }
 }
-
 
 // class FeatureCard extends StatelessWidget {
 //   final String title;

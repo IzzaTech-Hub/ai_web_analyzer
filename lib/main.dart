@@ -2,6 +2,7 @@ import 'package:ai_web_analyzer/app/fire_base/fire_base.dart';
 import 'package:ai_web_analyzer/app/fire_base/remoteconfig_services.dart';
 import 'package:ai_web_analyzer/app/providers/admob_ads_provider.dart';
 import 'package:ai_web_analyzer/app/routes/app_pages.dart';
+import 'package:api_key_pool/api_key_pool.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,8 +10,9 @@ import 'package:get/get.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MyFireBaseHandle.initialize();
+  await ApiKeyPool.init('Web Analyzer X PDF');
   await RemoteConfigService().initialize();
-AdMobAdsProvider.instance.initialize();
+  AdMobAdsProvider.instance.initialize();
   runApp(const MyApp());
 }
 

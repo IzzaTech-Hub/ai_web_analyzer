@@ -201,12 +201,12 @@ class ChatController extends GetxController {
     EasyLoading.show(status: 'Thinking...');
 
     try {
-      print('here0');
-      print('model: ${RCVariables.geminiModel}, key ${RCVariables.apiKey}');
+      // print('here0');
+      // print('model: ${RCVariables.geminiModel}, key ${RCVariables.apiKey}');
 
       // Prepare the content for the AI model.
       final content = Content('user', [TextPart(userMessage)]);
-      print('here1');
+      // print('here1');
       // Add the user's message to the history.
       history.add(content);
 
@@ -218,7 +218,7 @@ class ChatController extends GetxController {
       // Use the `history` argument in `generateContent`.
       final response = await aiModel
           .generateContent(history.toList()); // Convert RxList to List
-      print('here2');
+      // print('here2');
 
       if (response != null && response.text != null) {
         // print('here3');
