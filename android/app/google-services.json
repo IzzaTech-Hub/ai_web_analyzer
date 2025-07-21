@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064320356873",
+    "project_id": "ai-web-analyzer-f3939",
+    "storage_bucket": "ai-web-analyzer-f3939.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064320356873:android:1d535a3170d86233ae5ed8",
+        "android_client_info": {
+          "package_name": "app.chatwebai.pdfai_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnWTCGEJZ5Swqbsu-yY0ILbny3w1_sgPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
