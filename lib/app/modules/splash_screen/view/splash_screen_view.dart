@@ -4,13 +4,13 @@ import 'package:ai_web_analyzer/app/utills/appstring.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:ai_web_analyzer/app/utills/size_config.dart';
 
 class SplashScreen extends GetView<SplashController> {
   SplashScreen({Key? key}) : super(key: key);
 
   late BannerAd myBanner;
   RxBool isBannerLoaded = false.obs;
-
   initBanner() {
     myBanner = BannerAd(
       adUnitId: AppStrings.ADMOB_BANNER,
@@ -32,6 +32,7 @@ class SplashScreen extends GetView<SplashController> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     initBanner();
     return Scaffold(
       body: Container(

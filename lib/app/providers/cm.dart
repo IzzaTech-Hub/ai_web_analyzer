@@ -8,7 +8,7 @@ class ComFunction {}
 
 Container NativeAdMethed(NativeAd? nativeAd, RxBool isNativeAdLoaded) {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1.5),
+    // margin: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1.5),
     child: Obx(() => isNativeAdLoaded.value
         ? Container(width: 320, height: 280, child: AdWidget(ad: nativeAd!))
         : Container(

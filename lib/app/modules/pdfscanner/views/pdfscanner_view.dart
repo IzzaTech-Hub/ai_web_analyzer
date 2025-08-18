@@ -36,24 +36,42 @@ class PdfscannerView extends GetView<PdfscannerController> {
             'Scan to PDF',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          // actions: [
-          //   controller.isGenerated.value
-          //       ? IconButton(onPressed: () {}, icon: Icon(Icons.save))
-          //       : Container()
-          // ],
+          actions: [
+            // controller.isGenerated.value
+            //     ? IconButton(onPressed: () {}, icon: Icon(Icons.save))
+            //     : Container()
+            Obx(
+              () => !controller.isGenerated.value
+                  ? IconButton(
+                      onPressed: () {
+                        controller.onCameraTap();
+                      },
+                      icon: Icon(Icons.add_a_photo))
+                  : Container(),
+            ),
+            Obx(
+              () => !controller.isGenerated.value
+                  ? IconButton(
+                      onPressed: () {
+                        controller.onGalleryTap();
+                      },
+                      icon: Icon(Icons.add_photo_alternate))
+                  : Container(),
+            ),
+          ],
           centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.red.shade700,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Obx(() {
-          return !controller.isGenerated.value
-              ? ExpandableFab(
-                  onCameraTap: () => controller.onCameraTap(),
-                  onGalleryTap: () => controller.onGalleryTap(),
-                )
-              : SizedBox.shrink(); // Empty widget when FAB is hidden
-        }),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        // floatingActionButton: Obx(() {
+        //   return !controller.isGenerated.value
+        //       ? ExpandableFab(
+        //           onCameraTap: () => controller.onCameraTap(),
+        //           onGalleryTap: () => controller.onGalleryTap(),
+        //         )
+        //       : SizedBox.shrink(); // Empty widget when FAB is hidden
+        // }),
         body: Obx(() => !controller.isGenerated.value
             ? GenerationView(controller: controller)
             : PdfViewerWidget(
@@ -360,7 +378,7 @@ class GenerationView extends StatelessWidget {
                         ),
                       ),
                     )),
-
+                verticalSpace(12),
                 Obx(
                   () => AdMobAdsProvider.instance.isAdEnable.value
                       ? Center(

@@ -18,6 +18,7 @@ abstract class Routes {
   static const PDF_COMPRESS = _Paths.PDF_COMPRESS;
   static const PDF_OPERATIONS = _Paths.PDF_OPERATIONS;
   static const PDFSCANNER = _Paths.PDFSCANNER;
+  static const NEW_HOME = _Paths.NEW_HOME;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const PDF_COMPRESS = '/pdf-compress';
   static const PDF_OPERATIONS = '/pdf-operations';
   static const PDFSCANNER = '/pdfscanner';
+  static const NEW_HOME = '/new-home';
 }

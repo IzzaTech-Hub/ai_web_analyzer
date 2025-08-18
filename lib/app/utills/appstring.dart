@@ -10,34 +10,23 @@ class AppStrings {
   // static String ADMOB_REWARDED = "ca-app-pub-1216539747513056/8261895094";
  
  
+  //old Admob Real IDS! Andriod
+
+  // static String ADMOB_BANNER = "ca-app-pub-2735751208101773/2152749919";
+  // static String ADMOB_INTERSTITIAL = "ca-app-pub-2735751208101773/4948619432";
+  // static String ADMOB_APP_OPEN = "ca-app-pub-2735751208101773/2619653777";
+  // static String ADMOB_NATIVE = "ca-app-pub-2735751208101773/5245817119";
+  // static String ADMOB_REWARDED = "ca-app-pub-2735751208101773/6558898788";
+
+
+
   //new Admob Real IDS! Andriod
 
-  static String ADMOB_BANNER = "ca-app-pub-2735751208101773/2152749919";
-  static String ADMOB_INTERSTITIAL = "ca-app-pub-2735751208101773/4948619432";
-  static String ADMOB_APP_OPEN = "ca-app-pub-2735751208101773/2619653777";
-  static String ADMOB_NATIVE = "ca-app-pub-2735751208101773/5245817119";
-  static String ADMOB_REWARDED = "ca-app-pub-2735751208101773/6558898788";
-
-
-
-
-// App ID.
-// ca-app-pub-2735751208101773~1039527536
-
-// Banner Ads.
-// ca-app-pub-2735751208101773/2152749919
-
-// Interstitial Ads.
-// ca-app-pub-2735751208101773/4948619432
-
-// Native Ads.
-// ca-app-pub-2735751208101773/5245817119
-
-// Open Ads.
-// ca-app-pub-2735751208101773/2619653777
-
-// Rewarded Ads.
-// ca-app-pub-2735751208101773/6558898788
+  static String ADMOB_BANNER = "ca-app-pub-2454590580016622/5723895461";
+  static String ADMOB_INTERSTITIAL = "ca-app-pub-2454590580016622/4410813798";
+  // static String ADMOB_APP_OPEN = "ca-app-pub-2735751208101773/2619653777";
+  static String ADMOB_NATIVE = "ca-app-pub-2454590580016622/3624345733";
+  // static String ADMOB_REWARDED = "ca-app-pub-2735751208101773/6558898788";
 
 
   // Admob Test IDS!
@@ -48,3 +37,18 @@ class AppStrings {
   // static String ADMOB_NATIVE = "ca-app-pub-3940256099942544/2247696110";
   // static String ADMOB_REWARDED = "ca-app-pub-3940256099942544/5224354917";
 }
+
+
+// PDF Maker. Ads
+
+// App ID.
+// ca-app-pub-2454590580016622~7801627410
+
+// Banner Ads.
+// ca-app-pub-2454590580016622/5723895461
+
+// Interstitial Ads.
+// ca-app-pub-2454590580016622/4410813798
+
+// Native Ads.
+// ca-app-pub-2454590580016622/3624345733

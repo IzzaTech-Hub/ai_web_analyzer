@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ai_web_analyzer/app/modules/pdf/pdf_view.dart';
+import 'package:ai_web_analyzer/app/routes/app_pages.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:get/get.dart';
@@ -100,13 +101,15 @@ class PdfHandler {
         }
 
         document.dispose(); // Clean up
+        developer.log('ai pdf assistant');
 
         if (formattedPages.isEmpty) {
           Get.snackbar('Something Went wronge', 'Given file has no content');
 
           print("⚠️ No readable text found. The PDF might be encrypted.");
         } else {
-          AdNavigator.toNamed(const PDFView());
+          AdNavigator.toNamed(Routes.PDFVIEW);
+          // AdNavigator.toNamed(const PDFView());
 
           String finalExtractedText =
               formattedPages.join("\n\n════════════════════════\n\n");

@@ -41,13 +41,13 @@ class SplashController extends GetxController {
     // Try to show interstitial ad
     // AdMobAdsProvider.instance.showInterstitialAd((){});
     AdMobAdsProvider.instance.showInterstitialAd(() {
-      Get.offAllNamed(Routes.HOMEVIEW);
+      Get.offAllNamed(Routes.NEW_HOME);
     });
 
     // Fallback: if ad doesn't show in 3 seconds, navigate anyway
     Future.delayed(const Duration(seconds: 3), () {
       if (_isNavigating) {
-        Get.offAllNamed(Routes.HOMEVIEW);
+        Get.offAllNamed(Routes.NEW_HOME);
       }
     });
   }

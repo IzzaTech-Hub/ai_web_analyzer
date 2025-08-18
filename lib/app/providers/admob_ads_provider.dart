@@ -39,7 +39,7 @@ class AdMobAdsProvider {
     // Preload interstitial ad
     _lastInterstitialShownTime = DateTime.now().subtract(Duration(seconds: 50));
     _createInterstitialAd();
-    createRewardedAd();
+    // createRewardedAd();
     // _createRewardedInterstitialAd();[j.]
     // _createRewardedInterstitialAdGame();
     // loadAdRewardedInter();
@@ -294,77 +294,77 @@ class AdMobAdsProvider {
   }
 
   //? Rewarded Ad Implementation
-  void createRewardedAd() {
-    print("Reward Ad Load Called");
-    if (_rewardedAd == null) {
-      print("Reward Ad was Null");
+  // void createRewardedAd() {
+  //   print("Reward Ad Load Called");
+  //   if (_rewardedAd == null) {
+  //     print("Reward Ad was Null");
 
-      RewardedAd.load(
-          adUnitId: AppStrings.ADMOB_REWARDED,
-          request: AdRequest(),
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-            onAdLoaded: (RewardedAd ad) {
-              print('$ad loaded. Reward Ad');
-              _rewardedAd = ad;
-              _numRewardedLoadAttempts = 0;
-            },
-            onAdFailedToLoad: (LoadAdError error) {
-              print('RewardedAd failed to load: $error');
-              _rewardedAd = null;
-              _numRewardedLoadAttempts += 1;
-              if (_numRewardedLoadAttempts < maxFailedLoadAttempts) {
-                createRewardedAd();
-              }
-            },
-          ));
-    }
-  }
+  //     RewardedAd.load(
+  //         adUnitId: AppStrings.ADMOB_REWARDED,
+  //         request: AdRequest(),
+  //         rewardedAdLoadCallback: RewardedAdLoadCallback(
+  //           onAdLoaded: (RewardedAd ad) {
+  //             print('$ad loaded. Reward Ad');
+  //             _rewardedAd = ad;
+  //             _numRewardedLoadAttempts = 0;
+  //           },
+  //           onAdFailedToLoad: (LoadAdError error) {
+  //             print('RewardedAd failed to load: $error');
+  //             _rewardedAd = null;
+  //             _numRewardedLoadAttempts += 1;
+  //             if (_numRewardedLoadAttempts < maxFailedLoadAttempts) {
+  //               createRewardedAd();
+  //             }
+  //           },
+  //         ));
+  //   }
+  // }
 
-  bool isRewardedAdLoaded() {
-    if (_rewardedAd == null) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  // bool isRewardedAdLoaded() {
+  //   if (_rewardedAd == null) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
-  ShowRewardedAd(Function onReward) {
-    if (_rewardedAd == null) {
-      print('Warning: attempt to show rewarded before loaded.');
+  // ShowRewardedAd(Function onReward) {
+  //   if (_rewardedAd == null) {
+  //     print('Warning: attempt to show rewarded before loaded.');
 
-      Get.back();
-      EasyLoading.showError("No Ad Available try again later",
-          duration: Duration(seconds: 2));
-      showNoAdAvailableDialog();
+  //     Get.back();
+  //     EasyLoading.showError("No Ad Available try again later",
+  //         duration: Duration(seconds: 2));
+  //     showNoAdAvailableDialog();
 
-      return;
-    }
-    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (RewardedAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _rewardedAd = null;
+  //     return;
+  //   }
+  //   _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+  //     onAdShowedFullScreenContent: (RewardedAd ad) =>
+  //         print('ad onAdShowedFullScreenContent.'),
+  //     onAdDismissedFullScreenContent: (RewardedAd ad) {
+  //       print('$ad onAdDismissedFullScreenContent.');
+  //       ad.dispose();
+  //       _rewardedAd = null;
 
-        // createRewardedAd();
-      },
-      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        _rewardedAd = null;
+  //       // createRewardedAd();
+  //     },
+  //     onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+  //       print('$ad onAdFailedToShowFullScreenContent: $error');
+  //       _rewardedAd = null;
 
-        ad.dispose();
-        // createRewardedAd();
-      },
-    );
+  //       ad.dispose();
+  //       // createRewardedAd();
+  //     },
+  //   );
 
-    _rewardedAd!.setImmersiveMode(true);
-    _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
-      // Reward the user for watching an ad.
-      onReward();
-    });
-  }
+  //   _rewardedAd!.setImmersiveMode(true);
+  //   _rewardedAd!.show(
+  //       onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
+  //     // Reward the user for watching an ad.
+  //     onReward();
+  //   });
+  // }
 
   void showNoAdAvailableDialog() {
     Get.defaultDialog(

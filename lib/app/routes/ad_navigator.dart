@@ -38,10 +38,11 @@ class AdNavigator {
       adShown = true;
       completer.complete();
     });
-    // Fallback: if ad doesn't show in 2 seconds, continue
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!adShown) completer.complete();
-    });
+    // remove delay
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   if (!adShown) completer.complete();
+    // });
+    if (!adShown) completer.complete();
     return completer.future;
   }
 }

@@ -61,6 +61,33 @@ class PdfOperationsController extends GetxController {
     isgenerating.value = false;
   }
 
+  Future<void> quickConvert(String targetExt) async {
+    try {
+      // Connectivity check
+      try {
+        final connectivity = await Connectivity().checkConnectivity();
+        if (connectivity[0] == ConnectivityResult.none) {
+          Get.snackbar('No Internet Connection',
+              'Please Check your Internet Connectionand try again');
+          return;
+        }
+      } catch (e) {
+        // ignore connectivity check failures
+      }
+
+      isgenerating.value = true;
+      if (!await pickfile()) {
+        isgenerating.value = false;
+        return;
+      }
+      ext = targetExt;
+      path = generateConvertedFilePath(ext!);
+      await convertPdf();
+    } finally {
+      isgenerating.value = false;
+    }
+  }
+
   Future<bool> pickfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,

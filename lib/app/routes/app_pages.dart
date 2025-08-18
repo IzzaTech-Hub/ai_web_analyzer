@@ -4,6 +4,8 @@ import '../modules/chat/chat_view.dart';
 import '../modules/chat/chat_view_binding.dart';
 import '../modules/home/binding/home_view_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/new_home/bindings/new_home_binding.dart';
+import '../modules/new_home/views/new_home_view.dart';
 import '../modules/pdf/pdf_view.dart';
 import '../modules/pdf/pdf_view_binding.dart';
 import '../modules/pdf_compress/bindings/pdf_compress_binding.dart';
@@ -107,6 +109,11 @@ class AppPages {
       name: _Paths.PDFSCANNER,
       page: () => PdfscannerView(),
       binding: PdfscannerBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEW_HOME,
+      page: () => NewHomeView(),
+      binding: NewHomeBinding(),
     ),
   ];
 }
