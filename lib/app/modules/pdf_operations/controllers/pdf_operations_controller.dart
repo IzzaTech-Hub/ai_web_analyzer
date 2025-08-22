@@ -88,6 +88,34 @@ class PdfOperationsController extends GetxController {
     }
   }
 
+  Future<void> quickCreatePdfFrom(String sourceExt) async {
+    try {
+      // Connectivity check
+      try {
+        final connectivity = await Connectivity().checkConnectivity();
+        if (connectivity[0] == ConnectivityResult.none) {
+          Get.snackbar('No Internet Connection',
+              'Please Check your Internet Connectionand try again');
+          return;
+        }
+      } catch (e) {
+        // ignore connectivity check failures
+      }
+
+      isgenerating.value = true;
+      if (!await pickfileOfExtension(sourceExt)) {
+        isgenerating.value = false;
+        return;
+      }
+      // Always convert to PDF
+      ext = 'pdf';
+      path = generateConvertedFilePath(ext!);
+      await convertToPdf();
+    } finally {
+      isgenerating.value = false;
+    }
+  }
+
   Future<bool> pickfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -108,6 +136,23 @@ class PdfOperationsController extends GetxController {
     // return pdfFile;
     // return;
     // return result;
+  }
+
+  Future<bool> pickfileOfExtension(String extension) async {
+    // Support common alternates e.g., jpg when jpeg is selected
+    final lower = extension.toLowerCase();
+    final allowed = lower == 'jpeg' ? ['jpeg', 'jpg'] : [lower];
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: allowed,
+    );
+    if (result == null || result.files.single.path == null) {
+      Get.snackbar('No File Selected', 'Please Select a valid file');
+      return false;
+    } else {
+      pdfFile = File(result.files.single.path!);
+      return true;
+    }
   }
 
   Future<String?> showConvertToDialog() async {
@@ -366,7 +411,7 @@ class PdfOperationsController extends GetxController {
     } catch (e) {
       Get.dialog(AlertDialog(
         title: Text('File Conversion Failed'),
-        content: Text("Please check your Internet Connection"),
+        content: Text("File is Corrupted or No Internet Connection"),
         actions: [
           TextButton(
             onPressed: () => AdNavigator.back(), // Closes the dialog
@@ -376,6 +421,152 @@ class PdfOperationsController extends GetxController {
       ));
       print('Error during PDF conversion: $e');
       return null;
+    }
+  }
+
+  Future<void> convertToPdf() async {
+    String apiKey = RCVariables.clientId;
+    String clientId = RCVariables.clientId;
+    String clientSecret = RCVariables.clientSecret;
+
+    try {
+      // 1. Get OAuth token
+      final tokenResponse = await http.post(
+        Uri.parse('https://pdf-services.adobe.io/token'),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {'client_id': clientId, 'client_secret': clientSecret},
+      );
+      if (tokenResponse.statusCode != 200) {
+        throw Exception('Failed to get token');
+      }
+      final token = jsonDecode(tokenResponse.body)['access_token'];
+
+      // 2. Upload the SOURCE file (non-PDF)
+      final srcExt =
+          p.extension(pdfFile!.path).replaceFirst('.', '').toLowerCase();
+      final mediaType = _mediaTypeForExtension(srcExt);
+      if (mediaType == null) {
+        Get.snackbar('Unsupported File',
+            'Conversion from .$srcExt to PDF is not supported');
+        return;
+      }
+
+      final createAssetResponse = await http.post(
+        Uri.parse('https://pdf-services.adobe.io/assets'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'mediaType': mediaType}),
+      );
+      if (createAssetResponse.statusCode != 200) {
+        throw Exception('Asset creation failed');
+      }
+      final assetData = jsonDecode(createAssetResponse.body);
+      final uploadUri = assetData['uploadUri'];
+      final assetID = assetData['assetID'];
+
+      await http.put(
+        Uri.parse(uploadUri),
+        headers: {'Content-Type': mediaType},
+        body: pdfFile!.readAsBytesSync(),
+      );
+
+      // 3. Start conversion to PDF
+      final convertResponse = await http.post(
+        Uri.parse('https://pdf-services.adobe.io/operation/createpdf'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'assetID': assetID}),
+      );
+
+      final location = convertResponse.headers['location'];
+      if (location == null) throw Exception('No status location provided');
+
+      // 4. Poll for conversion result
+      while (true) {
+        await Future.delayed(Duration(seconds: 2));
+        final statusCheck = await http.get(
+          Uri.parse(location),
+          headers: {'Authorization': 'Bearer $token', 'x-api-key': apiKey},
+        );
+        final statusJson = jsonDecode(statusCheck.body);
+        if (statusJson['status'] == 'done') {
+          final downloadUri = statusJson['asset']['downloadUri'];
+          final resultResponse = await http.get(Uri.parse(downloadUri));
+          final file = File(path!);
+          await file.writeAsBytes(resultResponse.bodyBytes);
+          print('File saved: ${file.path}');
+          Get.dialog(AlertDialog(
+            title: Text('File Converted Successfully'),
+            content: Text("File Saved to Downloads"),
+            actions: [
+              TextButton(
+                onPressed: () => AdNavigator.back(),
+                child: Text('OK'),
+              ),
+            ],
+          ));
+          break;
+        } else if (statusJson['status'] == 'failed') {
+          throw Exception('Conversion failed: ${statusJson['error']}');
+        }
+      }
+    } catch (e) {
+      Get.dialog(AlertDialog(
+        title: Text('File Conversion Failed'),
+        content: Text("File is Corrupted or No Internet Connection"),
+        actions: [
+          TextButton(
+            onPressed: () => AdNavigator.back(),
+            child: Text('OK'),
+          ),
+        ],
+      ));
+      print('Error during File to PDF conversion: $e');
+      return null;
+    }
+  }
+
+  String? _mediaTypeForExtension(String extension) {
+    switch (extension.toLowerCase()) {
+      case 'doc':
+        return 'application/msword';
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      case 'xls':
+        return 'application/vnd.ms-excel';
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint';
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+      case 'rtf':
+        return 'application/rtf';
+      case 'txt':
+        return 'text/plain';
+      case 'jpeg':
+      case 'jpg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'bmp':
+        return 'image/bmp';
+      case 'tif':
+      case 'tiff':
+        return 'image/tiff';
+      case 'html':
+      case 'htm':
+        return 'text/html';
+      case 'csv':
+        return 'text/csv';
+      default:
+        return null;
     }
   }
 

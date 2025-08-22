@@ -70,7 +70,7 @@ class AdMobAdsProvider {
   }
 
   void showInterstitialAd(Function onRewardedAdWatched) {
-    int adShowDelay = 20;
+    int adShowDelay = 30;
 
     // Calculate the time difference between the current time and the last shown time
     Duration timeSinceLastShown =

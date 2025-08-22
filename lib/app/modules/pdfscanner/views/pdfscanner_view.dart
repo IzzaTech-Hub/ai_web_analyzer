@@ -36,42 +36,42 @@ class PdfscannerView extends GetView<PdfscannerController> {
             'Scan to PDF',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          actions: [
-            // controller.isGenerated.value
-            //     ? IconButton(onPressed: () {}, icon: Icon(Icons.save))
-            //     : Container()
-            Obx(
-              () => !controller.isGenerated.value
-                  ? IconButton(
-                      onPressed: () {
-                        controller.onCameraTap();
-                      },
-                      icon: Icon(Icons.add_a_photo))
-                  : Container(),
-            ),
-            Obx(
-              () => !controller.isGenerated.value
-                  ? IconButton(
-                      onPressed: () {
-                        controller.onGalleryTap();
-                      },
-                      icon: Icon(Icons.add_photo_alternate))
-                  : Container(),
-            ),
-          ],
+          // actions: [
+          //   // controller.isGenerated.value
+          //   //     ? IconButton(onPressed: () {}, icon: Icon(Icons.save))
+          //   //     : Container()
+          //   Obx(
+          //     () => !controller.isGenerated.value
+          //         ? IconButton(
+          //             onPressed: () {
+          //               controller.onCameraTap();
+          //             },
+          //             icon: Icon(Icons.add_a_photo))
+          //         : Container(),
+          //   ),
+          //   Obx(
+          //     () => !controller.isGenerated.value
+          //         ? IconButton(
+          //             onPressed: () {
+          //               controller.onGalleryTap();
+          //             },
+          //             icon: Icon(Icons.add_photo_alternate))
+          //         : Container(),
+          //   ),
+          // ],
           centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.red.shade700,
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        // floatingActionButton: Obx(() {
-        //   return !controller.isGenerated.value
-        //       ? ExpandableFab(
-        //           onCameraTap: () => controller.onCameraTap(),
-        //           onGalleryTap: () => controller.onGalleryTap(),
-        //         )
-        //       : SizedBox.shrink(); // Empty widget when FAB is hidden
-        // }),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: Obx(() {
+          return !controller.isGenerated.value
+              ? ExpandableFab(
+                  onCameraTap: () => controller.onCameraTap(),
+                  onGalleryTap: () => controller.onGalleryTap(),
+                )
+              : SizedBox.shrink(); // Empty widget when FAB is hidden
+        }),
         body: Obx(() => !controller.isGenerated.value
             ? GenerationView(controller: controller)
             : PdfViewerWidget(
@@ -177,31 +177,31 @@ class GenerationView extends StatelessWidget {
   NativeAd? nativeAd;
   RxBool nativeAdIsLoaded = false.obs;
 
-  initNative() {
-    nativeAd = NativeAd(
-      adUnitId: AppStrings.ADMOB_NATIVE,
-      request: AdRequest(),
-      // factoryId: ,
-      nativeTemplateStyle:
-          NativeTemplateStyle(templateType: TemplateType.medium),
-      listener: NativeAdListener(
-        onAdLoaded: (Ad ad) {
-          print('$NativeAd loaded.');
+  // initNative() {
+  //   nativeAd = NativeAd(
+  //     adUnitId: AppStrings.ADMOB_NATIVE,
+  //     request: AdRequest(),
+  //     // factoryId: ,
+  //     nativeTemplateStyle:
+  //         NativeTemplateStyle(templateType: TemplateType.medium),
+  //     listener: NativeAdListener(
+  //       onAdLoaded: (Ad ad) {
+  //         print('$NativeAd loaded.');
 
-          nativeAdIsLoaded.value = true;
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: $error');
-          ad.dispose();
-        },
-        onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
-      ),
-    )..load();
-  }
-  //? commented by jamal end
+  //         nativeAdIsLoaded.value = true;
+  //       },
+  //       onAdFailedToLoad: (Ad ad, LoadAdError error) {
+  //         print('$NativeAd failedToLoad: $error');
+  //         ad.dispose();
+  //       },
+  //       onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
+  //       onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
+  //     ),
+  //   )..load();
+  // }
+  // //? commented by jamal end
 
-  /// Native Ad Implemntation End ///
+  // /// Native Ad Implemntation End ///
   initBanner() {
     BannerAdListener listener = BannerAdListener(
       // Called when an ad is successfully received.
@@ -241,7 +241,7 @@ class GenerationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initBanner();
-    initNative();
+    // initNative();
     return Stack(
       children: [
         Padding(
@@ -379,19 +379,19 @@ class GenerationView extends StatelessWidget {
                       ),
                     )),
                 verticalSpace(12),
-                Obx(
-                  () => AdMobAdsProvider.instance.isAdEnable.value
-                      ? Center(
-                          child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal:
-                                      SizeConfig.blockSizeHorizontal * 5),
-                              child:
-                                  NativeAdMethed(nativeAd, nativeAdIsLoaded)),
-                        )
-                      : Container(),
-                ),
-                verticalSpace(12),
+                // Obx(
+                //   () => AdMobAdsProvider.instance.isAdEnable.value
+                //       ? Center(
+                //           child: Container(
+                //               margin: EdgeInsets.symmetric(
+                //                   horizontal:
+                //                       SizeConfig.blockSizeHorizontal * 5),
+                //               child:
+                //                   NativeAdMethed(nativeAd, nativeAdIsLoaded)),
+                //         )
+                //       : Container(),
+                // ),
+                // verticalSpace(12),
               ],
             ),
           ),

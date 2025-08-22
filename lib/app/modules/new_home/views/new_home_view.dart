@@ -20,34 +20,34 @@ class NewHomeView extends GetView<NewHomeController> {
   late BannerAd myBanner;
   RxBool isBannerLoaded = false.obs;
 
-  NativeAd? nativeAd;
-  RxBool nativeAdIsLoaded = false.obs;
+  // NativeAd? nativeAd;
+  // RxBool nativeAdIsLoaded = false.obs;
 
-  initNative() {
-    nativeAd = NativeAd(
-      adUnitId: AppStrings.ADMOB_NATIVE,
-      request: AdRequest(),
-      // factoryId: ,
-      nativeTemplateStyle:
-          NativeTemplateStyle(templateType: TemplateType.medium),
-      listener: NativeAdListener(
-        onAdLoaded: (Ad ad) {
-          print('$NativeAd loaded.');
+  // initNative() {
+  //   nativeAd = NativeAd(
+  //     adUnitId: AppStrings.ADMOB_NATIVE,
+  //     request: AdRequest(),
+  //     // factoryId: ,
+  //     nativeTemplateStyle:
+  //         NativeTemplateStyle(templateType: TemplateType.medium),
+  //     listener: NativeAdListener(
+  //       onAdLoaded: (Ad ad) {
+  //         print('$NativeAd loaded.');
 
-          nativeAdIsLoaded.value = true;
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: $error');
-          ad.dispose();
-        },
-        onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
-      ),
-    )..load();
-  }
-  //? commented by jamal end
+  //         nativeAdIsLoaded.value = true;
+  //       },
+  //       onAdFailedToLoad: (Ad ad, LoadAdError error) {
+  //         print('$NativeAd failedToLoad: $error');
+  //         ad.dispose();
+  //       },
+  //       onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
+  //       onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
+  //     ),
+  //   )..load();
+  // }
+  // //? commented by jamal end
 
-  /// Native Ad Implemntation End ///
+  // /// Native Ad Implemntation End ///
   initBanner() {
     BannerAdListener listener = BannerAdListener(
       // Called when an ad is successfully received.
@@ -87,11 +87,11 @@ class NewHomeView extends GetView<NewHomeController> {
   @override
   Widget build(BuildContext context) {
     initBanner();
-    initNative();
+    // initNative();
     final pdfOpsCtl = Get.find<PdfOperationsController>();
     final homeCtl = Get.find<HomeViewCTL>();
 
-    final converters = [
+    final toPdfConverters = [
       {
         'label': 'Word',
         'icon': Icons.description,
@@ -123,12 +123,44 @@ class NewHomeView extends GetView<NewHomeController> {
         'ext': 'rtf'
       },
     ];
+    final fromPdfConverters = [
+      {
+        'label': 'Word',
+        'icon': Icons.description,
+        'color': Colors.blueAccent,
+        'ext': 'docx'
+      },
+      {
+        'label': 'Excel',
+        'icon': Icons.grid_on,
+        'color': Colors.green,
+        'ext': 'xlsx'
+      },
+      {
+        'label': 'PowerPoint',
+        'icon': Icons.slideshow,
+        'color': Colors.orange,
+        'ext': 'pptx'
+      },
+      // {
+      //   'label': 'Images',
+      //   'icon': Icons.image,
+      //   'color': Colors.purple,
+      //   'ext': 'jpeg'
+      // },
+      // {
+      //   'label': 'RTF',
+      //   'icon': Icons.text_snippet_outlined,
+      //   'color': Colors.indigo,
+      //   'ext': 'rtf'
+      // },
+    ];
 
     return Scaffold(
       // backgroundColor: Colors.red.shade400,
 
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(SizeConfig.screenHeight * 0.2),
+          preferredSize: Size.fromHeight(SizeConfig.screenHeight * 0.25),
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -143,8 +175,9 @@ class NewHomeView extends GetView<NewHomeController> {
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  verticalSpace(10),
                   Text(
                     'AI PDF Assistant',
                     style: TextStyle(
@@ -158,6 +191,18 @@ class NewHomeView extends GetView<NewHomeController> {
                     'Chat with PDFs and use pro tools — all in one place.',
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
+                  Obx(() => isBannerLoaded.value &&
+                          AdMobAdsProvider.instance.isAdEnable.value
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Container(
+                                height: AdSize.banner.height.toDouble(),
+                                child: AdWidget(ad: myBanner)),
+                          ],
+                        )
+                      : Container()),
+                  verticalSpace(10),
                 ],
               ),
             ),
@@ -253,21 +298,9 @@ class NewHomeView extends GetView<NewHomeController> {
                     ),
 
                     const SizedBox(height: 10),
-                    Obx(() => isBannerLoaded.value &&
-                            AdMobAdsProvider.instance.isAdEnable.value
-                        ? Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Container(
-                                  height: AdSize.banner.height.toDouble(),
-                                  child: AdWidget(ad: myBanner)),
-                            ],
-                          )
-                        : Container()),
-                    verticalSpace(10),
                     // Converters section
                     const Text(
-                      'Convert PDF to',
+                      'Convert PDF to File',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
@@ -275,7 +308,7 @@ class NewHomeView extends GetView<NewHomeController> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: converters.map((c) {
+                      children: toPdfConverters.map((c) {
                         return InkWell(
                           onTap: () =>
                               pdfOpsCtl.quickConvert(c['ext'] as String),
@@ -310,6 +343,72 @@ class NewHomeView extends GetView<NewHomeController> {
                                   c['label'] as String,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      'Convert File to PDF',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: fromPdfConverters.map((c) {
+                        return InkWell(
+                          onTap: () {
+                            if (c['ext'] as String == 'jpeg') {
+                              AdNavigator.toNamed(Routes.PDFSCANNER);
+                            } else {
+                              pdfOpsCtl.quickCreatePdfFrom(c['ext'] as String);
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            width: (Get.width - 56) / 3,
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade100.withOpacity(0.5),
+                              // color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              // border: Border.all(color: Colors.grey.shade300),
+                              border: Border.all(
+                                  color: (c['color'] as Color)
+                                      .withValues(alpha: 0.3)),
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: Colors.red.shade100.withOpacity(0.5),
+                              //     // color: Color(0x11000000),
+                              //     blurRadius: 8,
+                              //     offset: Offset(0, 2),
+                              //   ),
+                              // ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor:
+                                      // (c['color'] as Color).withOpacity(0.15),
+                                      Colors.white.withOpacity(0.5),
+                                  child: Icon(c['icon'] as IconData,
+                                      color: c['color'] as Color),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  c['label'] as String,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: c['color'] as Color,
                                   ),
                                 ),
                               ],
@@ -437,18 +536,18 @@ class NewHomeView extends GetView<NewHomeController> {
                     //   child: const Text('Open Web Chat'),
                     // ),
                     //native ad
-                    Obx(
-                      () => AdMobAdsProvider.instance.isAdEnable.value
-                          ? Center(
-                              child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.blockSizeHorizontal * 5),
-                                  child: NativeAdMethed(
-                                      nativeAd, nativeAdIsLoaded)),
-                            )
-                          : Container(),
-                    ),
+                    // Obx(
+                    //   () => AdMobAdsProvider.instance.isAdEnable.value
+                    //       ? Center(
+                    //           child: Container(
+                    //               margin: EdgeInsets.symmetric(
+                    //                   horizontal:
+                    //                       SizeConfig.blockSizeHorizontal * 5),
+                    //               child: NativeAdMethed(
+                    //                   nativeAd, nativeAdIsLoaded)),
+                    //         )
+                    //       : Container(),
+                    // ),
                     verticalSpace(12),
                   ],
                 ),
